@@ -4,14 +4,31 @@ import numpy as np
 import math
 import re
 import sys
+# 命令行获取绝对路径
+path1 = sys.argv[1]
+path2 = sys.argv[2]
+path3 = sys.argv[3]
+
+def read_txt(name):
+    file=open(name,"r",encoding="utf-8")
+    r = '[’!"#$%&\'()*+,-.<=>?@[\\]^_`{|}~\n。！， ]+'
+    word=file.read()
+    word=re.sub(r,'',word) #去除标点符号
+    file.close()
+    return word
+def print_txt():
+    sim=get_similarity(path1,path2)
+    #以字符串形式写入
+    ans=("%.2f"%sim)
+    temp_txt = open(path3,'w',encoding='utf-8')
+    temp_txt.write(str(ans))
+    temp_txt.close()
 
 
-
-
-def get_vector(text1,text2):
-    # 分词
-    words1 = jieba.cut(text1)
-    words2 = jieba.cut(text2)
+def get_vector(s1,s2):
+   # 分词
+    words1 = jieba.cut(s1)
+    words2 = jieba.cut(s2)
     list_word1 = (','.join(words1)).split(',')
     list_word2 = (','.join(words2)).split(',')
 
@@ -38,27 +55,16 @@ def get_vector(text1,text2):
 def numerator(vector1, vector2):
     #分子
     return sum(a * b for a, b in zip(vector1, vector2))
-
 def denominator(vector):
     #分母
     return math.sqrt(sum(a * b for a,b in zip(vector, vector)))
-
 def run(vector1, vector2):
     return numerator(vector1,vector2) / (denominator(vector1) * denominator(vector2))
-
-def get_similarity(text1,text2):
-    vectors = get_vector(text1,text2)
+def get_similarity(s1,s2):
+    vectors = get_vector(s1,s2)
     # 相似度
     similarity = run(vector1=vectors[0], vector2=vectors[1])
     return similarity
 
-
 if __name__ == '__main__':
-     text1=input("原文件：")
-     text2=input("对比文件：")
-     ans = get_similarity(text1, text2)
-     print(ans)
-
-
-
-      
+    print_txt()
